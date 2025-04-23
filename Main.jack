@@ -1,0 +1,12 @@
+// Sebastian Andres Medina Cabezas
+// inicializa un juego de block breaker y lo corre
+
+class Main{
+    function void main(){
+        var BlockBreaker game;
+        let game = BlockBreaker.new();
+        do game.run();
+        do game.dispose();
+        return;        
+    }
+}

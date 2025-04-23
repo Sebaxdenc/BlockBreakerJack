@@ -1,0 +1,122 @@
+/* Implements a graphical "ball"
+    The ball has top-left x and y coordinates, a radius, and a direction. */
+
+class Ball {
+    field int x, y, radius; // screen location of this ball
+    field int dx, dy; // the ball's current direction and it's "degrees" kind of implementation 
+
+    /** Constructs and draws a new ball with a given location and size. */
+    constructor Ball new(int ax, int ay, int aradius, int adx, int ady) {
+        let dx = adx; // the ball's current direction in x axis
+        let dy = ady; // the ball's current direction in y axis
+        let x = ax;
+        let y = ay;
+        let radius = aradius;
+        do draw();
+        return this;
+    }
+
+    /** Disposes this ball. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draws this ball in its current (x,y) location */
+    method void draw() {
+        // Draws the ball using the color black
+        do Screen.setColor(true);
+        do Screen.drawCircle(x, y, radius);
+        return;
+    }
+
+    /** Erases this ball. */
+    method void erase() {
+        // Draws the ball using the color white (background color)
+        do Screen.setColor(false);
+        do Screen.drawCircle(x, y, radius);
+        return;
+    }
+    
+    /** Increase the radius of this ball by 2 pixels (if possible). */
+    method void incRadius() {
+        if (radius < 179) {
+            do erase();
+            let radius = radius + 2;
+            do draw();
+        }
+        return;
+    }
+
+    /** Decrease the radius of this ball by 2 pixels (if possible). */
+    method void decRadius() {
+        if (radius > 3) {
+            do erase();
+            let radius = radius - 2;
+            do draw();
+        }
+        return;
+    }
+
+    method boolean handleCollision(int breakerX, int breakerY, int breakerLength) {
+        //right wall
+        if(x + radius > 510 | x + radius = 510){
+            let dx = -dx;
+        }
+        // left wall
+        if(x - radius < 0 | x - radius = 0){
+            let dx = -dx;
+        }
+        // top wall
+        if(y - radius < 0 | y - radius = 0){
+            let dy = -dy;
+        }
+        // bottom wall
+        if(y + radius > 255 | y + radius = 255){
+            return false; // ball is lost
+        }
+
+        // breaker collision
+        if((y + radius > breakerY | y + radius = breakerY) ){
+
+            if(x > breakerX & x < (breakerX + breakerLength)){
+                let dx = -dx; 
+                let dy = -dy; // bounce up
+                do Output.printString("Ball");
+            }
+
+            // // breaker 30° (breaker extremes)
+            // if((x > breakerX | x = breakerX) & (x = (breakerX + (breakerLength/3)) | x < (breakerX + (breakerLength/3)))){
+            //     // changes its direction and makes the x axis a little bit faster to look like 30° direction
+            //     let dx = dx + 1; 
+            //     let dx = -dx;
+            // }
+            // // breaker 45° (breaker almost extremes)
+            // if((x > (breakerX + (breakerLength/3)) | x = (breakerX + (breakerLength/3))) & (x = (breakerX + (2*breakerLength/3)) | x < (breakerX + (2*breakerLength/3)))){
+            //     // changes its direction and that's all 
+            //     let dx = -dx;
+            // }
+            // // breaker 90° (breaker center)
+            // if((x > (breakerX + (2*breakerLength/3)) | x = (breakerX + (2*breakerLength/3))) & (x = (breakerX + breakerLength) | x < (breakerX + breakerLength))){
+            //     // only go up
+            //     let dx = 0;
+            // }
+                
+            
+        }
+        return true;
+
+    }
+
+    method void move() {
+
+        do erase();
+        let x = x + dx;
+        let y = y + dy;
+
+
+        do draw();
+        return;
+    }
+
+}

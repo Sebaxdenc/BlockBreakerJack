@@ -1,0 +1,91 @@
+/* Implements a graphical "breaker"
+    The breaker has top-left x and y coordinates, a length, and a direction. */
+
+class Breaker {
+    field int x, y; // screen location of the top-left corner of this breaker
+    field int length; // length of this breaker, in pixels
+
+    /** Constructs and draws a new breaker with a given location and size. */
+    constructor Breaker new(int ax, int ay, int alength) {
+        let x = ax;
+        let y = ay;
+        let length = alength;
+        do draw();
+        return this;
+    }
+
+    /** Disposes this breaker. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draws this breaker in its current (x,y) location */
+    method void draw() {
+        // Draws the breaker using the color black
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + length, y + 5);
+
+        return;
+    }
+
+    /** Erases this breaker. */
+    method void erase() {
+        // Draws the breaker using the color white (background color)
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + length, y + 5);
+        return;
+    }
+
+    /** Increase the length of this breaker by 2 pixels (if possible). */
+    method void incLength() {
+        if ((x + length) < 510) {
+            do erase();
+            let length = length + 2;
+            do draw();
+        }
+        return;
+    }
+
+    /** Decrease the length of this breaker by 2 pixels (if possible). */
+    method void decLength() {
+        if (length > 2) {
+            do erase();
+            let length = length - 2;
+            do draw();
+        }
+        return;
+    }
+
+    /** Moves this breaker left by 2 pixels (if possible). */
+    method void moveLeft() {
+        if (x > 2) {
+            do erase();
+            let x = x - 2;
+            do draw();
+        }
+        return;
+    }
+    
+    /** Moves this breaker right by 2 pixels (if possible). */
+    method void moveRight() {
+        if ((x + length) < 510) {
+            do erase();
+            let x = x + 2;
+            do draw();
+        }
+        return;
+    }
+
+    // getters
+    method int getX() {
+        return x;
+    }
+    method int getY() {
+        return y;
+    }
+    method int getLength() {
+        return length;
+    }
+
+}

@@ -1,0 +1,96 @@
+/*
+ * Implements the block breaker game
+ * This simple game allows the user to move a platform
+ * on the bottom of the screen, while a ball is bouncing
+ * around the screnn. The user controls the platform as follows:
+ * The left and right arrow keys are used to move the platform
+ * The 'q' key is used to quit the game
+ * The 'p' key is used to pause the game
+ * The 'r' key is used to resume the game
+ * The 's' key is used to start the game
+ * The 'a' key is used to add a new ball
+ * The 'd' key is used to remove a ball
+ * And if all the balls are removed, the game is over
+ * The balls can also be removed by hitting the bottom of the screen
+ * avoiding your platform
+*/
+
+class BlockBreaker{
+    field Breaker breaker; // the breaker of this game
+    field int direction; // the breaker's current direction
+                         // 0 = none, 1 = left, 2 = right
+    field Ball ball; // the ball of this game
+
+    /** Constructs a new block breaker game. */
+    constructor BlockBreaker new() {
+        // The initial breaker is located in (255,240), has a length of 30, and is not moving.
+        let breaker = Breaker.new(255, 240, 30);
+        let direction = 0; // no direction
+        // The initial ball is located in (0,0), has a radius of 5, and is not moving.
+        let ball = Ball.new(400, 20, 10, 1, 1);
+        return this;
+    }
+
+    /** Disposes this game. */
+    method void dispose() {
+        do breaker.dispose();
+        do ball.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Moves the breaker in the current direction. */
+    method void moveBreaker() {
+        if (direction = 1) { do breaker.moveLeft(); }
+        if (direction = 2) { do breaker.moveRight(); }
+        return;
+    }
+    
+    /** Runs the game: handles the user's inputs and moves the breaker accordingly */
+    method void run() {
+        var char key; // the key currently pressed by the user
+        var boolean exit;
+        var boolean pause;
+        var boolean start;
+        var boolean collisionResult; // Variable para almacenar el resultado de handleCollision
+        let exit = false;
+        let pause = false;
+        let start = false;
+
+        while (~exit) {
+            // Captura la tecla presionada
+            let key = Keyboard.keyPressed();
+
+            // Maneja las teclas de control
+            if (key = 81)  { let exit = true; }     // q key
+            if (key = 80)  { let pause = true; }   // p key
+            if (key = 82)  { let pause = false; }  // r key
+            if (key = 83)  { let start = true; }   // s key
+            if (key = 130) { let direction = 1; }  // left arrow
+            if (key = 132) { let direction = 2; }  // right arrow
+            if (key = 0)   { let direction = 0; }  // no key pressed
+
+            // Mueve el breaker según la dirección
+            do moveBreaker();
+
+            // Si el juego no está en pausa, mueve la pelota
+            if (~pause & start) {
+                do ball.move();
+                let collisionResult = ball.handleCollision(breaker.getX(), breaker.getY(), breaker.getLength());
+
+                // Comprueba el valor de collisionResult
+                if (~collisionResult) {
+                    // Si collisionResult es false, la pelota se perdió
+                    do Output.printString("Ball lost! Game over.");
+                    do Output.println();
+                    let exit = true; // Termina el juego
+                }
+            }
+
+            // Espera un breve momento para evitar sobrecarga
+            do Sys.wait(3);
+        }
+        return;
+    }
+
+}
