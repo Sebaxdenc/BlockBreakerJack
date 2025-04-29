@@ -23,17 +23,9 @@ class BlockBreaker{
     field Ball ball; // the ball of this game
 
     /** Constructs a new block breaker game. */
-    constructor BlockBreaker new() {
-        // The initial breaker is located in (255,240), has a length of 30, and is not moving.
-        let breaker = Breaker.new(255, 240, 30);
-        let direction = 0; // no direction
-        // The initial ball is located in (0,0), has a radius of 5, and is not moving.
-        let ball = Ball.new(255, 150, 5, 1, -1);
+    constructor BlockBreaker new(){
 
-        do Screen.setColor(true);
-        do Screen.drawRectangle(0, 0, 511, 255); // Draws the background
-        do Screen.setColor(false); // Sets the color to white (background color)
-        do Screen.drawRectangle(10, 10, 501, 255); // Draws the background
+        do initGame();
 
         return this;
     }
@@ -46,11 +38,57 @@ class BlockBreaker{
         return;
     }
 
+    method void initGame(){
+
+        do Screen.setColor(true);
+        do Screen.drawRectangle(0, 0, 511, 255); // Draws the background
+        do Screen.setColor(false); // Sets the color to white (background color)
+        do Screen.drawRectangle(10, 10, 501, 255); // Draws the background
+
+        // The initial breaker is located in (255,240), has a length of 30, and is not moving.
+        let breaker = Breaker.new(255, 240, 30);
+        let direction = 0; // no direction
+        // The initial ball is located in (0,0), has a radius of 5, and is not moving.
+        let ball = Ball.new(255, 150, 5, 1, -1);
+        return;
+
+    }
+
+
+
     /** Moves the breaker in the current direction. */
     method void moveBreaker() {
         if (direction = 1) { do breaker.moveLeft(); }
         if (direction = 2) { do breaker.moveRight(); }
         return;
+    }
+
+    method void gameOver(){
+
+        var char input;
+        do Screen.setColor(false); // Sets the color to white (background color)
+        do Screen.drawRectangle(0, 0, 511, 255); // Draws the background
+        do Output.moveCursor(2,28);
+		do Output.printString("Game over");
+        do Output.moveCursor(10,15);
+		do Output.printString("Please press [ENTER] to continue!");
+        do Output.moveCursor(11,14);
+		do Output.printString("Or you press [ESC] to exit the game!");
+        
+        let input = Keyboard.keyPressed();
+		while(~((input = 128) | (input = 140))){
+			let input = Keyboard.keyPressed();
+			do Sys.wait(10);
+		}
+		if(input = 128){
+            do initGame(); // Reinicia el juego
+            //do Memory.deAlloc(blocks); // Desasigna la memoria de los bloques
+			do run(); // Reinicia el juego
+		}else{
+            do Sys.halt(); // Termina el programa
+		}
+		return;
+
     }
     
     /** Runs the game: handles the user's inputs and moves the breaker accordingly */
@@ -60,9 +98,7 @@ class BlockBreaker{
         var boolean pause;
         var boolean start;
         var boolean collisionResult; // Variable para almacenar el resultado de handleCollision
-        let exit = false;
         let pause = false;
-        let start = false;
 
         while (~exit) {
             // Captura la tecla presionada
@@ -72,7 +108,6 @@ class BlockBreaker{
             if (key = 81)  { let exit = true; }     // q key
             if (key = 80)  { let pause = true; }   // p key
             if (key = 82)  { let pause = false; }  // r key
-            if (key = 83)  { let start = true; }   // s key
             if (key = 130) { let direction = 1; }  // left arrow
             if (key = 132) { let direction = 2; }  // right arrow
             if (key = 0)   { let direction = 0; }  // no key pressed
@@ -81,7 +116,7 @@ class BlockBreaker{
             do moveBreaker();
 
             // Si el juego no está en pausa, mueve la pelota
-            if (~pause & start) {
+            if (~pause) {
                 let collisionResult = ball.handleCollision(breaker.getX(), breaker.getY(), breaker.getLength());
                 do breaker.breakerCollisionCheck(ball); // Verifica la colisión entre la pelota y el breaker
                 do ball.move();
@@ -91,7 +126,7 @@ class BlockBreaker{
                     // Si collisionResult es false, la pelota se perdió
                     do Output.printString("Ball lost! Game over.");
                     do Output.println();
-                    let exit = true; // Termina el juego
+                    do gameOver(); // Llama a la función gameOver
                 }
             }
 
@@ -100,5 +135,7 @@ class BlockBreaker{
         }
         return;
     }
+
+
 
 }
