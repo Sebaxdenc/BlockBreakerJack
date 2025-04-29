@@ -3,7 +3,23 @@
 
 class Main{
     function void main(){
-        var BlockBreaker game;
+
+        var int key;
+        var BlockBreaker game;        
+
+        let key = Keyboard.keyPressed();
+
+        do Output.moveCursor(10, 13);
+        do Output.printString("Please press s to start the game!");
+
+        while(key > -1){
+            let key = Keyboard.keyPressed();
+            if(key = 83){
+                let key =-2;
+            }
+        }
+
+
         let game = BlockBreaker.new();
         do game.run();
         do game.dispose();

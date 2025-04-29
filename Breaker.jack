@@ -59,7 +59,7 @@ class Breaker {
 
     /** Moves this breaker left by 2 pixels (if possible). */
     method void moveLeft() {
-        if (x > 2) {
+        if (x > 10) {
             do erase();
             let x = x - 2;
             do draw();
@@ -69,7 +69,7 @@ class Breaker {
     
     /** Moves this breaker right by 2 pixels (if possible). */
     method void moveRight() {
-        if ((x + length) < 510) {
+        if ((x + length) < 501) {
             do erase();
             let x = x + 2;
             do draw();
@@ -87,5 +87,47 @@ class Breaker {
     method int getLength() {
         return length;
     }
+
+    method void breakerCollisionCheck(Ball ball){
+		var int ballX, ballY, ballRadius, fifth;
+		
+		let ballX = ball.getX();
+		let ballY = ball.getY();
+		let ballRadius = ball.getRadius();
+		
+		let fifth = (length / 5); //Divide bat in 3 parts (left = left, middle = up, right = right)
+		
+        if (((ballY + ballRadius) + 1) > y) {
+            if (((ballX - ballRadius) + 1) > x) {
+            if (ballX < (x + (1 * fifth))) {
+                do Output.printInt(1);
+                do ball.collideWithBreaker(1);
+                return;
+            }
+            if (ballX < (x + (2 * fifth))) {
+                do Output.printInt(2);
+                do ball.collideWithBreaker(2);
+                return;
+            }
+            if (ballX < (x + (3 * fifth))) {
+                do Output.printInt(3);
+                do ball.collideWithBreaker(3);
+                return;
+            }
+            if (ballX < (x + (4 * fifth))) {
+                do Output.printInt(4);
+                do ball.collideWithBreaker(4);
+                return;
+            }
+            if (((ballX - ballRadius) - 1) < (x + (5 * fifth))) {
+                do Output.printInt(5);
+                do ball.collideWithBreaker(5);
+                return;
+            }
+            }
+        }
+
+		return;
+	}
 
 }

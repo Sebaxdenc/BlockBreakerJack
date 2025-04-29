@@ -16,6 +16,7 @@
 */
 
 class BlockBreaker{
+
     field Breaker breaker; // the breaker of this game
     field int direction; // the breaker's current direction
                          // 0 = none, 1 = left, 2 = right
@@ -27,7 +28,13 @@ class BlockBreaker{
         let breaker = Breaker.new(255, 240, 30);
         let direction = 0; // no direction
         // The initial ball is located in (0,0), has a radius of 5, and is not moving.
-        let ball = Ball.new(400, 20, 10, 1, 1);
+        let ball = Ball.new(255, 150, 5, 1, -1);
+
+        do Screen.setColor(true);
+        do Screen.drawRectangle(0, 0, 511, 255); // Draws the background
+        do Screen.setColor(false); // Sets the color to white (background color)
+        do Screen.drawRectangle(10, 10, 501, 255); // Draws the background
+
         return this;
     }
 
@@ -75,8 +82,9 @@ class BlockBreaker{
 
             // Si el juego no está en pausa, mueve la pelota
             if (~pause & start) {
-                do ball.move();
                 let collisionResult = ball.handleCollision(breaker.getX(), breaker.getY(), breaker.getLength());
+                do breaker.breakerCollisionCheck(ball); // Verifica la colisión entre la pelota y el breaker
+                do ball.move();
 
                 // Comprueba el valor de collisionResult
                 if (~collisionResult) {
@@ -88,7 +96,7 @@ class BlockBreaker{
             }
 
             // Espera un breve momento para evitar sobrecarga
-            do Sys.wait(3);
+            do Sys.wait(5);
         }
         return;
     }
