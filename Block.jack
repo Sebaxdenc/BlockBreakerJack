@@ -1,0 +1,115 @@
+/* Implements a graphical "block"
+    the block has an x-y position, and his respective length and height*/
+
+class Block{
+
+    field int x, y, length, height;
+	field boolean isActive;
+	field BlockBreaker game;
+
+	// ----------- Memory methods --------------
+
+    constructor Block new (int xArg, int yArg, Game gameArg){
+		let x = xArg;
+		let y = yArg;
+		let game = gameArg;
+		let length = 50;
+		let height = 20;
+		let isActive = true;
+
+		do drawBlock();
+
+		return this;
+	}
+
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+
+	//Draws the block on screen
+	method void drawBlock(){
+		if(~isActive){
+			return;
+		}
+
+		do Screen.drawRectangle(x, y, x + length, y + height);
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x+2, y+2, (x-2) + length, (y-2) + height);
+		do Screen.setColor(true);
+		return;
+	}
+
+	method void eraseBlock(){
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x, y, x + length, y + height);
+		do Screen.setColor(true);
+		return;
+	}
+
+
+    method void doCollisionCheck(Ball ball){
+		var int ballX, ballY, ballRadius;
+	
+		if(~isActive){
+			return;
+		}
+	
+		let ballX = ball.getX();
+		let ballY = ball.getY();
+		let ballRadius = ball.getRadius();
+		
+
+		if((((ballY+ballRadius) - 1) > y) & (~(((ballY-ballRadius)-1) > (y+height)))){
+			// colision con laterales
+			if(((ballX+ballRadius) = x) | ((ballX-ballRadius) = (x+length))){
+				do ball.collideWithBlock(1);
+				do game.increaseScore();
+				do disable();
+				do eraseBlock();
+				let isActive = false;
+			}else{
+			// colision con arriba/abajo
+				if(((ballX+ballRadius) > x) & ((ballX-ballRadius) < ((x+length) + 1))){
+					do ball.collideWithBlock(2);
+					do game.increaseScore();
+					do disable();
+					do eraseBlock();
+					let isActive = false;
+				}
+			}
+		}
+        return;
+    }
+
+    //Enables the block again (when it was disabled before)
+	//This happens whenever a new game starts
+	method void enable(){
+		let isActive = true;
+		return;
+    }
+	method void disable(){
+		let isActive = false;
+		return;
+	}
+
+
+	
+	method int getHeight(){
+		return height;
+	}
+	
+	method int getWidth(){
+		return length;
+	}
+	
+	method int getX(){
+		return x;
+	}
+	
+	method int getY(){
+		return y;
+	}	
+    
+
+}

@@ -21,10 +21,14 @@ class BlockBreaker{
     field int direction; // the breaker's current direction
                          // 0 = none, 1 = left, 2 = right
     field Ball ball; // the ball of this game
+    field int points;
+    field String pointsS;
+    field int remainingBlocks;
+    field Array currentLevel;
 
     /** Constructs a new block breaker game. */
     constructor BlockBreaker new(){
-
+        let pointsS = "Points: ";
         do initGame();
 
         return this;
@@ -40,6 +44,8 @@ class BlockBreaker{
 
     method void initGame(){
 
+        let points = 0;
+
         do Screen.setColor(true);
         do Screen.drawRectangle(0, 0, 511, 255); // Draws the background
         do Screen.setColor(false); // Sets the color to white (background color)
@@ -50,8 +56,53 @@ class BlockBreaker{
         let direction = 0; // no direction
         // The initial ball is located in (0,0), has a radius of 5, and is not moving.
         let ball = Ball.new(255, 150, 5, 1, -1);
+
+        do initBlocks(3, 6); // Initializes the blocks
+
         return;
 
+    }
+
+    method void increaseScore(){
+        let points = points + 1;
+        do Output.moveCursor(2, 3);
+        do Output.printString(pointsS); // Prints the score
+        do Output.printInt(points); // Prints the score
+        do Output.printString(" "); // Prints a space to clear the line
+        return;
+    }
+
+    method void initBlocks(int row, int column) {
+        var int i, j, k;
+        var int x, y; // start x and y positions
+        var int numBlocks; // number of blocks to be created
+
+        let numBlocks = row * column; // number of blocks to be created
+        let remainingBlocks = numBlocks;
+        let currentLevel = Array.new(remainingBlocks); // Creates an array of blocks
+
+        let k = 0; // Index for the current block
+        let x = 60; // Starting x position
+        let y = 40; // Starting y position
+
+        // Loop through rows and columns to create blocks
+        let i = 0;
+        while (i < row) {
+            let j = 0;
+            while (j < column) {
+                let currentLevel[k] = Block.new(x + (j * 70), y + (i * 30), this); // Adjust spacing
+                let k = k + 1;
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    method void actualRemainingBlocks(int i){
+        let remainingBlocks = remainingBlocks + i;
+        return;
     }
 
 
@@ -82,7 +133,6 @@ class BlockBreaker{
 		}
 		if(input = 128){
             do initGame(); // Reinicia el juego
-            //do Memory.deAlloc(blocks); // Desasigna la memoria de los bloques
 			do run(); // Reinicia el juego
 		}else{
             do Sys.halt(); // Termina el programa
@@ -98,6 +148,8 @@ class BlockBreaker{
         var boolean pause;
         var boolean start;
         var boolean collisionResult; // Variable para almacenar el resultado de handleCollision
+        var int i; // a helper iterator 
+        var Block tmpBlock; // a helper block
         let pause = false;
 
         while (~exit) {
@@ -124,9 +176,13 @@ class BlockBreaker{
                 // Comprueba el valor de collisionResult
                 if (~collisionResult) {
                     // Si collisionResult es false, la pelota se perdió
-                    do Output.printString("Ball lost! Game over.");
-                    do Output.println();
                     do gameOver(); // Llama a la función gameOver
+                }
+                let i = 0;
+                while(i < remainingBlocks){
+                    let tmpBlock = currentLevel[i];
+                    do tmpBlock.doCollisionCheck(ball);
+                    let i = i+1;
                 }
             }
 
@@ -135,7 +191,5 @@ class BlockBreaker{
         }
         return;
     }
-
-
 
 }

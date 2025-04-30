@@ -1,9 +1,11 @@
 /* Implements a graphical "ball"
-    The ball has top-left x and y coordinates, a radius, and a direction. */
+    The ball has top-left x and y coordinates, a radius, and a direction x and y. */
 
 class Ball {
     field int x, y, radius; // screen location of this ball
-    field int dx, dy; // the ball's current direction and it's "degrees" kind of implementation 
+    field int dx, dy; // the ball's current direction
+
+    // ------------- Memory methods --------------
 
     /** Constructs and draws a new ball with a given location and size. */
     constructor Ball new(int ax, int ay, int aradius, int adx, int ady) {
@@ -22,6 +24,8 @@ class Ball {
         return;
     }
 
+    // ------------ Visual Methods --------------
+
     /** Draws this ball in its current (x,y) location */
     method void draw() {
         // Draws the ball using the color black
@@ -35,6 +39,17 @@ class Ball {
         // Draws the ball using the color white (background color)
         do Screen.setColor(false);
         do Screen.drawCircle(x, y, radius);
+        return;
+    }
+
+    method void move() {
+
+        do erase();
+        let x = x + dx;
+        let y = y + dy;
+
+
+        do draw();
         return;
     }
     
@@ -58,6 +73,8 @@ class Ball {
         return;
     }
 
+    // ------------- Game Logic Methods --------------
+
     method boolean handleCollision(int breakerX, int breakerY, int breakerLength) {
         //right wall
         if((x + radius > 500) | (x + radius = 500)){
@@ -79,9 +96,21 @@ class Ball {
         return true;
 
     }
+    
+    method void collideWithBlock(int section){
+        // 1 = left | right 
+        // 2 = top | bottom
+        if(section = 1){
+            let dx = -dx; // reverse the x direction of the ball
+        }
+        if(section = 2){
+            let dy = -dy; // reverse the y direction of the ball
+        }
+        return;
+    }
 
     method void collideWithBreaker(int section){
-		let dy = -dy; // reverse the y direction of the ball
+		let dy = -1; // reverse the y direction of the ball
 		
 		if(section = 1){ // 30°
 			let dx = -2;
@@ -89,31 +118,21 @@ class Ball {
 		if(section = 2){ // 45°
 			let dx = -1; 
 		}
-		if(section = 3){
+		if(section = 3){ // 90°
 			let dx = 0;
 		}
-        if(section = 4){
+        if(section = 4){ //45°
 			let dx = 1; 
         }
-        if(section = 5){
+        if(section = 5){ // 30°
 			let dx = 2;
         }
 
 		return;
 	}
 
-    method void move() {
-
-        do erase();
-        let x = x + dx;
-        let y = y + dy;
-
-
-        do draw();
-        return;
-    }
-
-    //getters
+    // --------------- Getters ----------------
+    
     method int getX() {
         return x;
     }

@@ -100,27 +100,22 @@ class Breaker {
         if (((ballY + ballRadius) + 1) > y) {
             if (((ballX - ballRadius) + 1) > x) {
             if (ballX < (x + (1 * fifth))) {
-                do Output.printInt(1);
                 do ball.collideWithBreaker(1);
                 return;
             }
             if (ballX < (x + (2 * fifth))) {
-                do Output.printInt(2);
                 do ball.collideWithBreaker(2);
                 return;
             }
             if (ballX < (x + (3 * fifth))) {
-                do Output.printInt(3);
                 do ball.collideWithBreaker(3);
                 return;
             }
             if (ballX < (x + (4 * fifth))) {
-                do Output.printInt(4);
                 do ball.collideWithBreaker(4);
                 return;
             }
             if (((ballX - ballRadius) - 1) < (x + (5 * fifth))) {
-                do Output.printInt(5);
                 do ball.collideWithBreaker(5);
                 return;
             }
