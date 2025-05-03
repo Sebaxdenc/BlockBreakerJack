@@ -27,7 +27,9 @@ class Block{
 		return;
 	}
 
-	//Draws the block on screen
+
+	// ------------ Visual Methods --------------
+
 	method void drawBlock(){
 		if(~isActive){
 			return;
@@ -47,6 +49,8 @@ class Block{
 		return;
 	}
 
+
+	// ------------ Game Logic Methods --------------
 
     method void doCollisionCheck(Ball ball){
 		var int ballX, ballY, ballRadius;
@@ -93,7 +97,7 @@ class Block{
 		return;
 	}
 
-
+	// --------------- Getters ----------------
 	
 	method int getHeight(){
 		return height;

@@ -4,12 +4,7 @@
  * on the bottom of the screen, while a ball is bouncing
  * around the screnn. The user controls the platform as follows:
  * The left and right arrow keys are used to move the platform
- * The 'q' key is used to quit the game
- * The 'p' key is used to pause the game
- * The 'r' key is used to resume the game
  * The 's' key is used to start the game
- * The 'a' key is used to add a new ball
- * The 'd' key is used to remove a ball
  * And if all the balls are removed, the game is over
  * The balls can also be removed by hitting the bottom of the screen
  * avoiding your platform
@@ -20,11 +15,17 @@ class BlockBreaker{
     field Breaker breaker; // the breaker of this game
     field int direction; // the breaker's current direction
                          // 0 = none, 1 = left, 2 = right
+
     field Ball ball; // the ball of this game
+
     field int points;
     field String pointsS;
+
     field int remainingBlocks;
+    
     field Array currentLevel;
+
+    // ------------- Memory methods --------------
 
     /** Constructs a new block breaker game. */
     constructor BlockBreaker new(){
@@ -41,6 +42,8 @@ class BlockBreaker{
         do Memory.deAlloc(this);
         return;
     }
+
+    // ------------ Visual Methods --------------
 
     method void initGame(){
 
@@ -113,6 +116,8 @@ class BlockBreaker{
         if (direction = 2) { do breaker.moveRight(); }
         return;
     }
+
+    // ------------ Game Logic Methods --------------
 
     method void gameOver(){
 

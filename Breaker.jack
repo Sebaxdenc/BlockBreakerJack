@@ -5,6 +5,9 @@ class Breaker {
     field int x, y; // screen location of the top-left corner of this breaker
     field int length; // length of this breaker, in pixels
 
+
+    // ------------- Memory methods --------------
+
     /** Constructs and draws a new breaker with a given location and size. */
     constructor Breaker new(int ax, int ay, int alength) {
         let x = ax;
@@ -19,6 +22,8 @@ class Breaker {
         do Memory.deAlloc(this);
         return;
     }
+
+    // ------------ Visual Methods --------------
 
     /** Draws this breaker in its current (x,y) location */
     method void draw() {
@@ -77,16 +82,7 @@ class Breaker {
         return;
     }
 
-    // getters
-    method int getX() {
-        return x;
-    }
-    method int getY() {
-        return y;
-    }
-    method int getLength() {
-        return length;
-    }
+    // --------------- Collision methods --------------
 
     method void breakerCollisionCheck(Ball ball){
 		var int ballX, ballY, ballRadius, fifth;
@@ -125,4 +121,15 @@ class Breaker {
 		return;
 	}
 
+    // --------------- Getters ----------------
+
+    method int getX() {
+        return x;
+    }
+    method int getY() {
+        return y;
+    }
+    method int getLength() {
+        return length;
+    }
 }
