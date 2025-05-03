@@ -26,6 +26,7 @@ class Ball {
 
     // ------------ Visual Methods --------------
 
+
     /** Draws this ball in its current (x,y) location */
     method void draw() {
         // Draws the ball using the color black

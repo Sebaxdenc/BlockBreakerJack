@@ -90,8 +90,10 @@ class Block{
 	//This happens whenever a new game starts
 	method void enable(){
 		let isActive = true;
+		do drawBlock();
 		return;
     }
+	
 	method void disable(){
 		let isActive = false;
 		return;

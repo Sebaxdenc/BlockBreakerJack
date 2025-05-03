@@ -22,6 +22,7 @@ class BlockBreaker{
     field String pointsS;
 
     field int remainingBlocks;
+    field int numBlocks; // number of blocks to be created
     
     field Array currentLevel;
 
@@ -58,9 +59,9 @@ class BlockBreaker{
         let breaker = Breaker.new(255, 240, 30);
         let direction = 0; // no direction
         // The initial ball is located in (0,0), has a radius of 5, and is not moving.
-        let ball = Ball.new(255, 150, 5, 1, -1);
+        let ball = Ball.new(255, 220, 5, 1, -1);
 
-        do initBlocks(3, 6); // Initializes the blocks
+        do initBlocks(1, 6); // Initializes the blocks (row, columns)
 
         return;
 
@@ -68,7 +69,9 @@ class BlockBreaker{
 
     method void increaseScore(){
         let points = points + 1;
-        do Output.moveCursor(2, 3);
+        let remainingBlocks = remainingBlocks - 1;
+        do Screen.setColor(true); // Sets the color to white (background color)
+        do Output.moveCursor(0, 0);
         do Output.printString(pointsS); // Prints the score
         do Output.printInt(points); // Prints the score
         do Output.printString(" "); // Prints a space to clear the line
@@ -78,7 +81,6 @@ class BlockBreaker{
     method void initBlocks(int row, int column) {
         var int i, j, k;
         var int x, y; // start x and y positions
-        var int numBlocks; // number of blocks to be created
 
         let numBlocks = row * column; // number of blocks to be created
         let remainingBlocks = numBlocks;
@@ -103,11 +105,17 @@ class BlockBreaker{
         return;
     }
 
-    method void actualRemainingBlocks(int i){
-        let remainingBlocks = remainingBlocks + i;
+    method void enableBlocks(){
+        var int i;
+        var Block tmpBlock; // a helper block
+        let i = 0;
+        while(i < numBlocks){
+            let tmpBlock = currentLevel[i];
+            do tmpBlock.enable(); // Enable the block
+            let i = i + 1;
+        }
         return;
     }
-
 
 
     /** Moves the breaker in the current direction. */
@@ -184,10 +192,13 @@ class BlockBreaker{
                     do gameOver(); // Llama a la función gameOver
                 }
                 let i = 0;
-                while(i < remainingBlocks){
+                while(i < numBlocks){
                     let tmpBlock = currentLevel[i];
                     do tmpBlock.doCollisionCheck(ball);
                     let i = i+1;
+                }
+                if(remainingBlocks = 0){
+                    do enableBlocks(); // Llama a la función gameOver
                 }
             }
 
