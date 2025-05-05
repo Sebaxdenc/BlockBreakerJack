@@ -26,6 +26,15 @@ class Ball {
 
     // ------------ Visual Methods --------------
 
+    method void ballReturn(int ax, int ay, int adx, int ady) {
+        do erase();
+        let x = ax;
+        let y = ay;
+        let dx = adx; // the ball's current direction in x axis
+        let dy = ady; // the ball's current direction in y axis
+        do draw();
+        return;
+    }
 
     /** Draws this ball in its current (x,y) location */
     method void draw() {

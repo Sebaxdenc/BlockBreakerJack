@@ -61,7 +61,7 @@ class BlockBreaker{
         // The initial ball is located in (0,0), has a radius of 5, and is not moving.
         let ball = Ball.new(255, 220, 5, 1, -1);
 
-        do initBlocks(1, 6); // Initializes the blocks (row, columns)
+        do initBlocks(1, 6); // Initializes the blocks (row, columns)     --------------this is the line that creates the blocks
 
         return;
 
@@ -70,7 +70,6 @@ class BlockBreaker{
     method void increaseScore(){
         let points = points + 1;
         let remainingBlocks = remainingBlocks - 1;
-        do Screen.setColor(true); // Sets the color to white (background color)
         do Output.moveCursor(0, 0);
         do Output.printString(pointsS); // Prints the score
         do Output.printInt(points); // Prints the score
@@ -162,6 +161,8 @@ class BlockBreaker{
         var boolean start;
         var boolean collisionResult; // Variable para almacenar el resultado de handleCollision
         var int i; // a helper iterator 
+        var int breakerX; // the breaker's x position
+        var int breakerY; // the breaker's y position
         var Block tmpBlock; // a helper block
         let pause = false;
 
@@ -198,7 +199,12 @@ class BlockBreaker{
                     let i = i+1;
                 }
                 if(remainingBlocks = 0){
+                    let remainingBlocks = numBlocks; // Reinicia el número de bloques restantes
+                    let breakerX = breaker.getX(); // Obtiene la posición x del breaker
+                    let breakerY = breaker.getY(); // Obtiene la posición y del breaker
+                    do ball.ballReturn(breakerX, breakerY-10, 1, -1);
                     do enableBlocks(); // Llama a la función gameOver
+
                 }
             }
 
